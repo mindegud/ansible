@@ -1,0 +1,30 @@
+---
+- hosts: linux
+  remote_user: root
+  vars_prompt:
+   - name: "username"
+     prompt: "What is your username?"
+   - name: "appname"
+     prompt: "What is your appmname?"
+   - name: "appurl"
+     prompt: "What is app url?"
+  tasks:
+    - name: AddUser
+      ansible.builtin.user:
+        name: "{{username}}"
+        comment: "{{appname}}"
+        group: users
+        createhome: yes        
+        home: /home/"{{username}}""   
+    - name: extractarchive
+      ansible.builtin.unarchive:
+        src: "{{ appurl }}"
+        dest: "/home/{{username}}/"
+        remote_src: true
+    - name: populate service facts
+      ansible.builtin.service_facts:
+    - name: enable services on boot
+      ansible.builtin.service:
+        name: "{{ appname }}"
+        enabled: true
+        state: started
