@@ -21,8 +21,13 @@
         src: "{{ appurl }}"
         dest: "/home/{{username}}/"
         remote_src: true
-    - name: populate service facts
-      ansible.builtin.service_facts:
+    - name: create service file
+      template:
+        src: "service.j2"
+        dest: /etc/systemd/system/{{appname}}.service
+        mode: 0744
+    - name: reload service daemon
+      command: systemctl daemon-reload
     - name: enable services on boot
       ansible.builtin.service:
         name: "{{ appname }}"
