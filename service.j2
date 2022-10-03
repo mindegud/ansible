@@ -1,0 +1,12 @@
+[Unit]
+Description={{appname}}
+After=network.target
+
+[Service]
+Type=simple
+User={{username}}
+ExecStart=/home/{{username}}/{{appname}}.sh
+Restart=always
+
+[Install]
+WantedBy=default.target
